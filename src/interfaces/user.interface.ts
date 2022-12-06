@@ -6,7 +6,7 @@ import { Document } from "mongoose";
 export class User extends Document {
   @Prop()
   @ApiProperty({
-    description: "用户名/手机号",
+    description: "手机号",
     example: "18912300045"
   })
   readonly username: string;
@@ -17,4 +17,8 @@ export class User extends Document {
     example: "123456"
   })
   readonly password: string;
+
+  @Prop()
+  readonly salt?: string
+  phone: string;
 }

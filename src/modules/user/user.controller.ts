@@ -1,10 +1,12 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { User } from 'src/interfaces/user.interface';
 import { UserService } from './user.service';
 
 @Controller('user')
 @ApiTags("用户模块")
+@UseGuards(AuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
