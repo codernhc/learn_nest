@@ -16,30 +16,25 @@ export class AuthService {
   private async validateUser(user: User) {
     const phone: string = user.username
     const password: string = user.password
-    this.userService.findOneByPhone(phone).then((res) => {
+    return await this.userService.findOneByPhone(phone).then((res) => {
       if (!res.length) {
-        this.response = {
-          code: 403,
-          msg: "用户尚未注册"
-        }
-        const dbUser: User = res[0]
-        return dbUser
+        this.response = { code: 403, msg: "用户尚未注册" }
+        throw this.response
       }
+      return res[0]
     }).then((dbUser: User) => {
       const pass = encript(password, dbUser.salt)
       if (pass == dbUser.password) {
-        this.response = {
-          code: 200,
-          msg: "登陆成功"
-        }
+        return this.response = { code: 200, msg: "登陆成功" }
       } else {
-        this.response = {
-          code: 500,
-          msg: "用户名或密码错误"
-        }
+        this.response = { code: 500, msg: "用户名或密码错误" }
         throw this.response
       }
     }).catch(err => err)
+  }
+
+  public async login(user: User) {
+    return await this.validateUser(user)
   }
 
   create(createAuthDto: CreateAuthDto) {
@@ -60,5 +55,9 @@ export class AuthService {
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
+  }
+
+  private async createToken(user: User) {
+    // return await this.jwtService.sign(user)
   }
 }
