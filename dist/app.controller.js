@@ -17,22 +17,10 @@ let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
     }
-    getHello() {
-        return this.appService.getHello();
-    }
 };
-__decorate([
-    (0, common_1.Get)(),
-    (0, swagger_1.ApiOperation)({
-        summary: "测试接口"
-    }),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", String)
-], AppController.prototype, "getHello", null);
 AppController = __decorate([
     (0, common_1.Controller)(),
-    (0, swagger_1.ApiTags)("App 总模块"),
+    (0, swagger_1.ApiTags)("App Modules"),
     __metadata("design:paramtypes", [app_service_1.AppService])
 ], AppController);
 exports.AppController = AppController;

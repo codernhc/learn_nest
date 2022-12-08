@@ -6,7 +6,7 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Controller('auth')
-@ApiTags('用户登录校验模块')
+@ApiTags('User login verification module')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 

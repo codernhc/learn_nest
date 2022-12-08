@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { IResponse } from 'src/interfaces/response.interfacs';
 import { User } from 'src/interfaces/user.interface';
 import { UserService } from 'src/modules/user/user.service';
 import { encript } from 'src/utils/encription';
@@ -7,10 +9,11 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Injectable()
 export class AuthService {
-  response: { code: number; msg: string; };
-
+  response: { code: number; msg: any; };
+  
   constructor(
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
   ) { }
 
   private async validateUser(user: User) {
@@ -34,7 +37,20 @@ export class AuthService {
   }
 
   public async login(user: User) {
-    return await this.validateUser(user)
+    // return await this.validateUser(user).then(() => {
+    //   return this.createToken(user)
+    // })
+
+    return await this.validateUser(user).then(async (res: IResponse) => {
+      if (res.code !== 200) {
+        throw this.response = res
+      }
+      const userid = res.msg.userid
+      return this.response = {
+        code: 200,
+        msg: { token: await this.createToken(user), userid }
+      }
+    }).catch(err => err)
   }
 
   create(createAuthDto: CreateAuthDto) {
@@ -58,6 +74,6 @@ export class AuthService {
   }
 
   private async createToken(user: User) {
-    // return await this.jwtService.sign(user)
+    return await this.jwtService.sign(user)
   }
 }

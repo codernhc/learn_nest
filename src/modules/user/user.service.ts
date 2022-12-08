@@ -55,7 +55,7 @@ export class UserService {
       })
   }
 
-  public async findOneByPhone(phone: string) {
+  public async findOneByPhone(phone: string): Promise<any>  {
     return await this.userModule.find({
       username: phone
     })

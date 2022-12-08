@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { GoodsSchema } from './schemas/goods.schema';
 import { UserSchema } from './schemas/user.schema';
 
 const MONGO_MODELS = MongooseModule.forFeature([
@@ -7,6 +8,11 @@ const MONGO_MODELS = MongooseModule.forFeature([
     name: "USER_MODEL",
     schema: UserSchema,
     collection: "user"
+  },
+  {
+    name:"GOODS_MODEL",
+    schema: GoodsSchema,
+    collection: "goods"
   }
 ])
 

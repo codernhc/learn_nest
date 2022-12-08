@@ -3,16 +3,16 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 
 @Controller()
-@ApiTags("App 总模块")
+@ApiTags("App Modules")
 export class AppController {
   constructor(private readonly appService: AppService) { }
 
-  @Get()
-  @ApiOperation({
-    summary: "测试接口"
-  })
+  // @Get()
+  // @ApiOperation({
+  //   summary: "Test API"
+  // })
   // @ApiTags("get hello")
-  getHello(): string {
-    return this.appService.getHello();
-  }
+  // getHello(): string {
+  //   return this.appService.getHello();
+  // }
 }

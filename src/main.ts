@@ -10,10 +10,15 @@ const bootstrap = async () => {
   app.enableCors()
 
   const config = new DocumentBuilder()
-    .setTitle('shop项目管理平台')
-    .setDescription('shop平台API Documentation')
+    .setTitle('shop API Documentation')
+    .setDescription('shop API Documentation')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('Shop Project Application Programming Interface')
+    .addBearerAuth({
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "JWT",
+    }, "jwt")
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

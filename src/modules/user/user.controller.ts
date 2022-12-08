@@ -1,12 +1,14 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { Body, Controller, Get, Post, SetMetadata, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBasicAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/interfaces/user.interface';
+import { Role } from '../role/role.decorator';
 import { UserService } from './user.service';
 
 @Controller('user')
-@ApiTags("用户模块")
-@UseGuards(AuthGuard)
+@ApiTags("User Model")
+@UseGuards(AuthGuard('jwt'))
+@ApiBasicAuth('jwt')
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
@@ -16,5 +18,12 @@ export class UserController {
   })
   async regist(@Body() userDto: User) {
     return await this.userService.regist(userDto);
+  }
+
+  @Get("hello")
+  @Role('admin')
+  // @SetMetadata("roles", ['admin'])
+  hello() {
+    return "hello world"
   }
 }
