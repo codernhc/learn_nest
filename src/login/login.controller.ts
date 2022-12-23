@@ -1,0 +1,36 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { LoginService } from './login.service';
+import { CreateLoginDto } from './dto/create-login.dto';
+import { UpdateLoginDto } from './dto/update-login.dto';
+import { LoginPipe } from './login.pipe';
+
+@Controller('login')
+export class LoginController {
+  constructor(private readonly loginService: LoginService) { }
+
+  @Post()
+  // create(@Body(new LoginPipe()) createLoginDto: CreateLoginDto) {
+  login(@Body() createLoginDto: CreateLoginDto) {
+    return this.loginService.Login(createLoginDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.loginService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.loginService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateLoginDto: UpdateLoginDto) {
+    return this.loginService.update(+id, updateLoginDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.loginService.remove(+id);
+  }
+}

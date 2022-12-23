@@ -1,9 +1,12 @@
-import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common/services';
+import { NestFactory } from '@nestjs/core';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+
+import Response from './common/Response';
+import HttpFilters from './common/HttpFilters';
 
 const logger = new Logger('AppModule')
 
@@ -23,6 +26,10 @@ async function bootstrap() {
       }
     }),
   );
+
+  app.useGlobalFilters(new HttpFilters())
+  app.useGlobalInterceptors(new Response())
+  app.useGlobalPipes(new ValidationPipe())
 
   app.useStaticAssets(join(__dirname, "images"), {
     prefix: "/img"
