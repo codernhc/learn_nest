@@ -9,9 +9,6 @@ import { LoginModule } from './login/login.module';
 
 @Module({
   imports: [
-    UserModule,
-    UploadModule,
-    LoginModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -19,11 +16,27 @@ import { LoginModule } from './login/login.module';
       username: 'root',
       password: '123456',
       database: 'myapp',
-      entities: [],
+      autoLoadEntities: true,
       synchronize: true,
     }),
+    UserModule,
+    UploadModule,
+    LoginModule,
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports: [
+    // TypeOrmModule.forRoot({
+    //   type: 'mysql',
+    //   host: 'localhost',
+    //   port: 3306,
+    //   username: 'root',
+    //   password: '123456',
+    //   database: 'myapp',
+    //   autoLoadEntities: true,
+    //   synchronize: true,
+    // }),
+    AppModule
+  ]
 })
 export class AppModule { }

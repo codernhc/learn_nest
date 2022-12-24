@@ -1,29 +1,24 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import * as svgCaptcha from 'svg-captcha';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-  // create(createUserDto: CreateUserDto) {
-  //   return 'This action adds a new user';
-  // }
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) { }
 
-  // findAll() {
-  //   return `This action returns all user`;
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} user`;
-  // }
-
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
+  async findOne(phone: string): Promise<any> {
+    return await this.usersRepository.find({
+      where: {
+        phone,
+      },
+    })
+  }
 
   createCode() {
     const Captcha = svgCaptcha.create({
@@ -36,11 +31,28 @@ export class UserService {
     return Captcha
   }
 
-  verifyCode(createUserDto: CreateUserDto, session) {
-    if (session.code.toLocaleLowerCase() == createUserDto?.code?.toLocaleLowerCase()) {
-      return {
-        code: HttpStatus.OK,
-        message: "验证码正确"
+  async verifyCode(user: CreateUserDto, session: { code: string; }) {
+    const phone: string = user.phone
+    const password: string = user.password
+
+    if (session?.code?.toLocaleLowerCase() ?? undefined == user?.code?.toLocaleLowerCase() ?? undefined) {
+      // console.log(createUserDto)
+      const res = await this.findOne(phone)
+      // console.log(res, "===========>")
+      if (res.length) {
+        return {
+          code: HttpStatus.PRECONDITION_FAILED,
+          message: "用户已注册"
+        }
+      } else {
+        const data = new User()
+        data.password = password
+        data.phone = phone
+        this.usersRepository.save(data)
+        return {
+          code: HttpStatus.CREATED,
+          message: "用户注册成功"
+        }
       }
     } else {
       return {
@@ -49,5 +61,4 @@ export class UserService {
       }
     }
   }
-
 }
