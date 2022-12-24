@@ -1,29 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as svgCaptcha from 'svg-captcha';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
+  // create(createUserDto: CreateUserDto) {
+  //   return 'This action adds a new user';
+  // }
 
-  findAll() {
-    return `This action returns all user`;
-  }
+  // findAll() {
+  //   return `This action returns all user`;
+  // }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} user`;
+  // }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+  // update(id: number, updateUserDto: UpdateUserDto) {
+  //   return `This action updates a #${id} user`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} user`;
+  // }
 
   createCode() {
     const Captcha = svgCaptcha.create({
@@ -35,4 +35,19 @@ export class UserService {
     })
     return Captcha
   }
+
+  verifyCode(createUserDto: CreateUserDto, session) {
+    if (session.code.toLocaleLowerCase() == createUserDto?.code?.toLocaleLowerCase()) {
+      return {
+        code: HttpStatus.OK,
+        message: "验证码正确"
+      }
+    } else {
+      return {
+        code: HttpStatus.BAD_REQUEST,
+        message: "验证码错误"
+      }
+    }
+  }
+
 }

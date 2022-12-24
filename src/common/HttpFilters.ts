@@ -11,7 +11,7 @@ class HttpFilters implements ExceptionFilter {
     const next = ctx.getNext()
 
     const status = exception.getStatus()
-    // console.log(exception)
+    console.log(exception)
     res.status(status).json({
       success: false,
       status,

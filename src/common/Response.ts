@@ -1,4 +1,4 @@
-import { CallHandler, Injectable, NestInterceptor } from "@nestjs/common";
+import { CallHandler, ExecutionContext, HttpStatus, Injectable, NestInterceptor } from "@nestjs/common";
 import { Observable, map } from "rxjs";
 
 interface Date<T> {
@@ -7,11 +7,11 @@ interface Date<T> {
 
 @Injectable()
 class Response<T> implements NestInterceptor {
-  intercept(context, next: CallHandler): Observable<Date<T>> {
+  intercept(_: ExecutionContext, next: CallHandler): Observable<Date<T>> {
     return next.handle().pipe(map(data => {
       return {
         data,
-        status: 0,
+        status: HttpStatus.OK,
         messgae: "success",
         success: true,
       }

@@ -15,19 +15,21 @@ export class UserController {
     res.type("image/svg+xml")
     res.send(captcha.data)
   }
+
   @Post('create')
   create(@Body() createUserDto: CreateUserDto, @Session() session) {
-    if (session.code.toLocaleLowerCase() == createUserDto?.code?.toLocaleLowerCase()) {
-      return {
-        code: 200,
-        msg: "验证码正确"
-      }
-    } else {
-      return {
-        code: 400,
-        msg: "验证码错误"
-      }
-    }
+    return this.userService.verifyCode(createUserDto,session)
+    // if (session.code.toLocaleLowerCase() == createUserDto?.code?.toLocaleLowerCase()) {
+    //   return {
+    //     code: HttpStatus.OK,
+    //     msg: "验证码正确"
+    //   }
+    // } else {
+    //   return {
+    //     code: HttpStatus.BAD_REQUEST,
+    //     msg: "验证码错误"
+    //   }
+    // }
   }
 
   // @Get()
