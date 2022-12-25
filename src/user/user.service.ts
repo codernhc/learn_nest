@@ -12,7 +12,7 @@ export class UserService {
     private usersRepository: Repository<User>,
   ) { }
 
-  async findOne(phone: string): Promise<any> {
+  async findOne(phone: string): Promise<User[]> {
     return await this.usersRepository.find({
       where: {
         phone,
@@ -31,7 +31,7 @@ export class UserService {
     return Captcha
   }
 
-  async verifyCode(user: CreateUserDto, session: { code: string; }) {
+  async createUser(user: CreateUserDto, session: { code: string; }) {
     const phone: string = user.phone
     const password: string = user.password
 
@@ -45,14 +45,23 @@ export class UserService {
           message: "用户已注册"
         }
       } else {
-        const data = new User()
-        data.password = password
-        data.phone = phone
-        this.usersRepository.save(data)
-        return {
-          code: HttpStatus.CREATED,
-          message: "用户注册成功"
+        try {
+          const data = new User()
+          data.password = password
+          data.phone = phone
+          this.usersRepository.save(data)
+          return {
+            code: HttpStatus.CREATED,
+            message: "用户注册成功"
+          }
+        } catch (error) {
+          return {
+            code: HttpStatus.CREATED,
+            time: new Date(),
+            message: "用户注册失败请联系管理员"
+          }
         }
+
       }
     } else {
       return {

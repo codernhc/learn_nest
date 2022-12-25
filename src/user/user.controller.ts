@@ -18,7 +18,7 @@ export class UserController {
 
   @Post('create')
   create(@Body() createUserDto: CreateUserDto, @Session() session) {
-    return this.userService.verifyCode(createUserDto,session)
+    return this.userService.createUser(createUserDto,session)
     // if (session.code.toLocaleLowerCase() == createUserDto?.code?.toLocaleLowerCase()) {
     //   return {
     //     code: HttpStatus.OK,
