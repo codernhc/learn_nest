@@ -1,17 +1,16 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { addSalt, encript } from 'src/utils/encryption';
+import { NextFunction } from 'express';
+import { hashPassword } from 'src/utils/encryption';
 
 @Injectable()
 export class HashPasswdMiddleware implements NestMiddleware {
-  use(req: any, res: any, next: () => void) {
+  use(req: Request, _: Response, next: NextFunction) {
     console.log("req", req.body)
 
     let userPassword = req.body['password']
-    const salt = addSalt()
     if (userPassword) {
-      userPassword = encript(userPassword, salt)
+      userPassword = hashPassword(userPassword)
       req.body['password'] = userPassword
-      req.body['salt'] = salt
     }
     next();
   }

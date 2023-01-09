@@ -1,27 +1,31 @@
+import * as bcryptjs from 'bcryptjs';
 
-// import { createCipheriv, randomBytes, scrypt } from 'crypto';
-// import { promisify } from 'util';
 
-// const iv = randomBytes(16);
-// const password = 'Password used to generate key';
+/**
+ * 加密处理 - 同步方法
+ * bcryptjs.hashSync(data, salt)
+ *    - data  要加密的数据
+ *    - slat  用于哈希密码的盐。如果指定为数字，则将使用指定的轮数生成盐并将其使用。推荐 10
+*/
+const hashPassword = (password) => bcryptjs.hashSync(password, 10)
 
-// // The key length is dependent on the algorithm.
-// // In this case for aes256, it is 32 bytes.
-// const key = (await promisify(scrypt)(password, 'salt', 32)) as Buffer;
-// const cipher = createCipheriv('aes-256-ctr', key, iv);
 
-// const textToEncrypt = 'Nest';
-// const encryptedText = Buffer.concat([
-//   cipher.update(textToEncrypt),
-//   cipher.final(),
-// ]);
+/**
+ * 校验 - 使用同步方法
+ * bcryptjs.compareSync(data, encrypted)
+ *    - data        要比较的数据, 使用登录时传递过来的密码
+ *    - encrypted   要比较的数据, 使用从数据库中查询出来的加密过的密码
+*/
+const isOk = (password, encryptPassword) => bcryptjs.compareSync(password, encryptPassword)
 
-import * as crypto from 'crypto'
-
-export function addSalt() {
-  return crypto.randomBytes(3).toString('base64')
+export {
+  hashPassword,
+  isOk
 }
+// export function addSalt() {
+//   return crypto.randomBytes(3).toString('base64')
+// }
 
-export function encript(userPassword: string, salt: string): string {
-  return crypto.pbkdf2Sync(userPassword, salt, 10000, 16, 'sha256').toString('base64')
-}
+// export function encript(userPassword: string, salt: string): string {
+//   return crypto.pbkdf2Sync(userPassword, salt, 10000, 16, 'sha256').toString('base64')
+// }

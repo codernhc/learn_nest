@@ -1,9 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, Generated } from "typeorm";
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id:number
+  id: number
 
   @Column()
   phone: string
@@ -11,6 +11,12 @@ export class User {
   @Column()
   password: string
 
+  @PrimaryGeneratedColumn('uuid')
+  uuid: string
+
+  // @Timestamp()
+  @CreateDateColumn({ type: "timestamp" })
+  createdAt: Date
   // @Column()
   // code:string
 }

@@ -12,14 +12,14 @@ export class UserService {
     private usersRepository: Repository<User>,
   ) { }
 
-  async findOne(phone: string): Promise<User[]> {
-    return await this.usersRepository.find({
-      where: {
-        phone,
-      },
-    })
+  async findOne(phone: string): Promise<User> {
+    return await this.usersRepository.findOneBy({ phone })
   }
 
+  /**
+   * 验证码
+   * @returns Captcha
+   */
   createCode() {
     const Captcha = svgCaptcha.create({
       size: 4,
@@ -31,6 +31,13 @@ export class UserService {
     return Captcha
   }
 
+  /**
+   * 注册方法
+   * 
+   * @param user UserDto
+   * @param session { code: string; }
+   * @returns 
+   */
   async createUser(user: CreateUserDto, session: { code: string; }) {
     const phone: string = user.phone
     const password: string = user.password
@@ -39,10 +46,11 @@ export class UserService {
       // console.log(createUserDto)
       const res = await this.findOne(phone)
       // console.log(res, "===========>")
-      if (res.length) {
+      if (res) {
         return {
           code: HttpStatus.PRECONDITION_FAILED,
-          message: "用户已注册"
+          message: "用户已注册",
+          data: new Date()
         }
       } else {
         try {
@@ -52,7 +60,8 @@ export class UserService {
           this.usersRepository.save(data)
           return {
             code: HttpStatus.CREATED,
-            message: "用户注册成功"
+            message: "用户注册成功",
+            data: new Date()
           }
         } catch (error) {
           return {

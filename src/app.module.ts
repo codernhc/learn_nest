@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { UploadModule } from './upload/upload.module';
 import { LoginModule } from './login/login.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,20 +23,11 @@ import { LoginModule } from './login/login.module';
     UserModule,
     UploadModule,
     LoginModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
   exports: [
-    // TypeOrmModule.forRoot({
-    //   type: 'mysql',
-    //   host: 'localhost',
-    //   port: 3306,
-    //   username: 'root',
-    //   password: '123456',
-    //   database: 'myapp',
-    //   autoLoadEntities: true,
-    //   synchronize: true,
-    // }),
     AppModule
   ]
 })
